@@ -45,8 +45,7 @@ class index extends Component {
             <div style={{width: 200, margin: 'auto', overflow: 'hidden'}}>
                 {
                     this.state.dataList.map(({id, text}) => (
-                        // text={text} id={id}
-                        <Marquee key={id} />
+                        <Marquee key={id} text={text}/>
                     ))
                 }
                 <button onClick={this.clickBtn}>变</button>

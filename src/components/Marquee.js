@@ -9,10 +9,36 @@ class Marquee extends PureComponent {
         this.viewRef = React.createRef()
         this.textRef = React.createRef()
     }
-    move (start, end, durition) {
+    componentDidMount = async ()=> {
+        try {
+            const { start, end, duration } = await this.isNeedToMove()
+            this.move(start, end, duration)
+        } catch (e) {}
+    }
+    componentDidUpdate = async () => {
+        try {
+            const { start, end, duration } = await this.isNeedToMove()
+            this.move(start, end, duration)
+        } catch (e) {}
+    }
+    isNeedToMove = () => {
+        return new Promise((resolve, reject) => {
+            const viewWidth = this.viewRef.current.getBoundingClientRect().width
+            const textWidth = this.textRef.current.getBoundingClientRect().width
+            const duration = Math.floor(textWidth / speed)
+            if (textWidth > viewWidth) {
+                const start = viewWidth
+                const end = -Math.floor(textWidth)
+                return resolve({ start, end, duration })
+            } else {
+                return reject('')
+            }
+        })
+    }
+    move (start, end, duration) {
         ++marquee_id
-        this.viewRef.style = `
-            animation: move_${marquee_id} ${durition}s linear infinite;
+        this.viewRef.current.style = `
+            animation: move_${marquee_id} ${duration}s linear infinite;
         `
         var styleSheets = document.styleSheets[0];  //获取样式表引用
         var index = styleSheets.length;  //获取样式表中包含样式的个数
@@ -28,32 +54,12 @@ class Marquee extends PureComponent {
             }`, index);
         }
     }
-    componentDidMount () {
-        const viewWidth = this.viewRef.getBoundingClientRect().width
-        const textWidth = this.textRef.getBoundingClientRect().width
-        const durition = Math.floor(textWidth / speed)
-        if (textWidth > viewWidth) {
-            const start = viewWidth
-            const end = -Math.floor(textWidth)
-            this.move(start, end, durition)
-        }
-    }
-    componentDidUpdate () {
-        const viewWidth = this.viewRef.getBoundingClientRect().width
-        const textWidth = this.textRef.getBoundingClientRect().width
-        const durition = Math.floor(textWidth / speed)
-        if (textWidth > viewWidth) {
-            const start = viewWidth
-            const end = -Math.floor(textWidth)
-            this.move(start, end, durition)
-        }
-    }
     render() {
         const { text } = this.props
         return (
             <div className="Marquee_Bar">
-                <div className="Marquee_View" ref={ref => this.viewRef = ref}>{ text }</div>
-                <div className="Marquee_Opacity" ref={ref => this.textRef = ref}>{ text }</div>
+                <div className="Marquee_View" ref={this.viewRef}>{ text }</div>
+                <div className="Marquee_Opacity" ref={this.textRef}>{ text }</div>
             </div>
         );
     }
