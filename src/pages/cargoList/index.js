@@ -29,15 +29,27 @@ class index extends Component {
             })
         }, 500)
     }
+    clickBtn = () => {
+        const newData = this.state.dataList.map(el => {
+            if (el.id === 1) {
+                el.text += el.text
+            }
+            return el
+        })
+        this.setState({
+            dataList: newData
+        })
+    }
     render() {
         return (
             <div style={{width: 200, margin: 'auto', overflow: 'hidden'}}>
                 {
                     this.state.dataList.map(({id, text}) => (
-                        <Marquee key={id} text={text} id={id}/>
+                        // text={text} id={id}
+                        <Marquee key={id} />
                     ))
                 }
-                
+                <button onClick={this.clickBtn}>变</button>
             </div>
         );
     }
