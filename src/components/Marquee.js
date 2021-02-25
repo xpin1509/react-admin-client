@@ -1,43 +1,25 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, useRef, useEffect } from 'react';
 import "./index.css";
 // 跑马灯
 const speed = 20
 let marquee_id = 1
-class Marquee extends PureComponent {
-    constructor (props) {
-        super(props)
-        this.viewRef = React.createRef()
-        this.textRef = React.createRef()
-    }
-    componentDidMount = async ()=> {
-        try {
-            const { start, end, duration } = await this.isNeedToMove()
-            this.move(start, end, duration)
-        } catch (e) {}
-    }
-    componentDidUpdate = async () => {
-        try {
-            const { start, end, duration } = await this.isNeedToMove()
-            this.move(start, end, duration)
-        } catch (e) {}
-    }
-    isNeedToMove = () => {
-        return new Promise((resolve, reject) => {
-            const viewWidth = this.viewRef.current.getBoundingClientRect().width
-            const textWidth = this.textRef.current.getBoundingClientRect().width
-            const duration = Math.floor(textWidth / speed)
-            if (textWidth > viewWidth) {
-                const start = viewWidth
-                const end = -Math.floor(textWidth)
-                return resolve({ start, end, duration })
-            } else {
-                return reject('')
-            }
-        })
-    }
-    move (start, end, duration) {
+
+function Marquee (props) {
+    const viewRef = useRef()
+    const textRef = useRef()
+    useEffect(() => {
+        const viewWidth = viewRef.current.getBoundingClientRect().width
+        const textWidth = textRef.current.getBoundingClientRect().width
+        const duration = Math.floor(textWidth / speed)
+        if (textWidth > viewWidth) {
+            const start = viewWidth
+            const end = -Math.floor(textWidth)
+            move(start, end, duration)
+        }
+    })
+    function move (start, end, duration) {
         ++marquee_id
-        this.viewRef.current.style = `
+        viewRef.current.style = `
             animation: move_${marquee_id} ${duration}s linear infinite;
         `
         var styleSheets = document.styleSheets[0];  //获取样式表引用
@@ -54,15 +36,12 @@ class Marquee extends PureComponent {
             }`, index);
         }
     }
-    render() {
-        const { text } = this.props
-        return (
-            <div className="Marquee_Bar">
-                <div className="Marquee_View" ref={this.viewRef}>{ text }</div>
-                <div className="Marquee_Opacity" ref={this.textRef}>{ text }</div>
-            </div>
-        );
-    }
+    return (
+        <div className="Marquee_Bar">
+            <div className="Marquee_View" ref={viewRef}>{ props.text }</div>
+            <div className="Marquee_Opacity" ref={textRef}>{ props.text }</div>
+        </div>
+    );
 }
 
 export default Marquee;
