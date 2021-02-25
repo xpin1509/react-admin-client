@@ -9,19 +9,23 @@ function request () {
     })
 }
 
-function* incrementLater() {
+function* incrementLater({ counterCaption }) {
     try {
         const state = yield select()
         console.log(state)
-        yield put({type: "INCREMENT"});
+        yield delay(1000)
+        yield put({type: INCREMENT, counterCaption });
     } catch (e) {
     //    yield put({type: "USER_FETCH_FAILED", message: e.message});
     }
 }
 
-function* decrementLater(params) {
+function* decrementLater({ counterCaption }) {
     try {
-        console.log('de')
+        const state = yield select()
+        console.log(state)
+        yield delay(1000)
+        yield put({type: DECREMENT, counterCaption });
         //    yield put({type: "USER_FETCH_SUCCEEDED", user: user});
     } catch (e) {
         //    yield put({type: "USER_FETCH_FAILED", message: e.message});
