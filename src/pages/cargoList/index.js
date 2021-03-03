@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Marquee from "../../components/Marquee";
+import Marquee from "../../components/marquee/Marquee";
 class index extends Component {
     state = {
         dataList: []
