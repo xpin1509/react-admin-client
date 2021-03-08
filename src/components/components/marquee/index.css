@@ -1,0 +1,14 @@
+.Marquee_Bar {
+    position: relative;
+}
+.Marquee_View {
+    white-space: nowrap;
+    opacity: 1;
+}
+.Marquee_Opacity {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    visibility: hidden;
+}
